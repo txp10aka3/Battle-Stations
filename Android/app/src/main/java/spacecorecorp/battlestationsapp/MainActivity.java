@@ -1,27 +1,35 @@
 package spacecorecorp.battlestationsapp;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.concurrent.TimeUnit;
 
 import spacecorecorp.battlestationsapp.network.GameDiscoveryListener;
+import spacecorecorp.battlestationsapp.network.ParseIPAddressTask;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends Activity
 {
     private static final String SERVICE_TYPE = "_spacegame._tcp";
     private static final String LOG_TAG = "MainActivity";
+    private static final int PERMISSIONS_KEY = 5312;
 
     private EditText editTextName;
     private EditText editTextIP;
@@ -35,12 +43,18 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        setContentView(R.layout.activity_main);
 
         editTextName = findViewById(R.id.editTextUser);
         editTextIP = findViewById(R.id.editTextIP);
         buttonProceed = findViewById(R.id.buttonGo);
+
+        if(!setUpPermissions())
+            return;
+        else
+            Log.d(LOG_TAG, "onCreate");
 
         nsdManager = (NsdManager) getSystemService(Context.NSD_SERVICE);
 
@@ -51,7 +65,7 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onResolveFailed(NsdServiceInfo nsdServiceInfo, int i)
                 {
-
+                    Log.d(LOG_TAG, "onResolveFailed");
                 }
 
                 @Override
@@ -92,11 +106,12 @@ public class MainActivity extends AppCompatActivity
                     {
                         try
                         {
-                            ipAddress = InetAddress.getByName(editTextIP.getText().toString());
+                            ipAddress = new ParseIPAddressTask(editTextIP.getText().toString()).get(500, TimeUnit.MILLISECONDS);
                         }
-                        catch (UnknownHostException uhe)
+                        catch (Exception ex)
                         {
-                            uhe.printStackTrace();
+                            ex.printStackTrace();
+                            ipAddress = null;
                         }
                     }
 
@@ -134,8 +149,24 @@ public class MainActivity extends AppCompatActivity
     protected void onStop()
     {
         super.onStop();
-        if(nsdManager != null)
+        if(nsdManager != null && discoveryListener != null && setUpPermissions())
             nsdManager.stopServiceDiscovery(discoveryListener);
+    }
+
+    private boolean setUpPermissions()
+    {
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_WIFI_STATE) != PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.CHANGE_WIFI_MULTICAST_STATE) != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET, Manifest.permission.READ_PHONE_STATE,
+                    Manifest.permission.ACCESS_WIFI_STATE, Manifest.permission.CHANGE_WIFI_MULTICAST_STATE}, PERMISSIONS_KEY);
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
 
     private Activity getActivity()
