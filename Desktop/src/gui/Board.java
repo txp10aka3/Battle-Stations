@@ -6,11 +6,12 @@ public class Board
 	private int[][] board;
 	private int ship1R;
 	private int ship2R;
+	private int size;
 	
-	
-	public Board()
+	public Board(int s)
 	{
-		board = new int[10][10];
+		size = s;
+		board = new int[size][size];
 		for(int y = 0; y<board.length; y++)
 		{
 			for(int x = 0; x<board[y].length; x++)
@@ -18,10 +19,10 @@ public class Board
 				board[y][x] = 0;
 			}
 		}
-		board[0][9] = 2;
-		board[9][0] = 1;
+		board[0][size-1] = 2;
+		board[size-1][0] = 1;
 		ship1R = 0;
-		ship2R = 0;
+		ship2R = 2;
 	}
 	
 	public void moveShip1(int[][] movement)
@@ -47,12 +48,16 @@ public class Board
 			{
 				moved[1] -= movement[i][0];
 			}
-			moved[1] %=10;
-			moved[0] %=10;
-			ship1R %=4;
+			System.out.print(""+moved[0]);
+			moved[1] = modulo(moved[1], size);
+			System.out.print(""+moved[0]);
+			moved[0] = modulo(moved[0], size);
+			ship1R += movement[i][1];
+			ship1R = modulo(ship1R,4);
 		}
-		board[moved[1]][moved[0]] = 1;
-		board[initial[1]][initial[0]] = 0;
+		
+		board[initial[0]][initial[1]] = 0;
+		board[moved[0]][moved[1]] = 1;
 	}
 	public int[] getShip1Position()
 	{
@@ -81,26 +86,29 @@ public class Board
 		{
 			if(ship2R == 0)
 			{
-				moved[1] += movement[i][0];
+				moved[0] -= movement[i][0];
 			}
 			if(ship2R == 1)
 			{
-				moved[0] += movement[i][0];
+				moved[1] += movement[i][0];
 			}
 			if(ship2R == 2)
 			{
-				moved[1] -= movement[i][0];
+				moved[0] += movement[i][0];
 				
 			}
 			if(ship2R == 3)
 			{
-				moved[0] -= movement[i][0];
+				moved[1] -= movement[i][0];
 			}
+			moved[1] = modulo(moved[1], size);
+			moved[0] = modulo(moved[0], size);
 			ship2R += movement[i][1];
-			ship2R %= ship2R;
+			ship2R = modulo(ship2R,4);
+			
 		}
-		board[moved[1]][moved[0]] = 2;
-		board[initial[1]][initial[0]] = 0;
+		board[initial[0]][initial[1]] = 0;
+		board[moved[0]][moved[1]] = 2;
 	}
 	public int[] getShip2Position()
 	{
@@ -148,5 +156,18 @@ public class Board
 			}
 		}
 		return(-1);
+	}
+	
+	public int getSize()
+	{
+		return(size);
+	}
+	public int getBoardAtCoordinates(int y, int x)
+	{
+		return(board[y][x]);
+	}
+	public int modulo(int n,int m)
+	{
+		return(((n%m)+m)%m);
 	}
 }
