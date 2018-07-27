@@ -48,9 +48,7 @@ public class Board
 			{
 				moved[1] -= movement[i][0];
 			}
-			System.out.print(""+moved[0]);
 			moved[1] = modulo(moved[1], size);
-			System.out.print(""+moved[0]);
 			moved[0] = modulo(moved[0], size);
 			ship1R += movement[i][1];
 			ship1R = modulo(ship1R,4);

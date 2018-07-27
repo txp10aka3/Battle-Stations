@@ -13,14 +13,26 @@ public class BoardPanel extends JPanel
 	private int frameWidth;
 	private int frameHeight;
 	private Board board;
-	private ImageIcon box;
-	private ImageIcon ship1;
-	private ImageIcon ship2;
+	private ImageIcon space;
+	private ImageIcon blueShip0;
+	private ImageIcon blueShip1;
+	private ImageIcon blueShip2;
+	private ImageIcon blueShip3;
+	private ImageIcon redShip0;
+	private ImageIcon redShip1;	
+	private ImageIcon redShip2;	
+	private ImageIcon redShip3;	
 	public BoardPanel(Board b, int fw, int fh)
 	{
-		box = new ImageIcon(BoardPanel.class.getResource("/art/Box.png"));
-		ship1 = new ImageIcon(BoardPanel.class.getResource("/art/bbox.png"));
-		ship2= new ImageIcon(BoardPanel.class.getResource("/art/rbox.png"));
+		space = new ImageIcon(BoardPanel.class.getResource("/art/emptySpace.png"));
+		blueShip0 = new ImageIcon(BoardPanel.class.getResource("/art/blueship0.png"));
+		blueShip1 = new ImageIcon(BoardPanel.class.getResource("/art/blueship1.png"));
+		blueShip2 = new ImageIcon(BoardPanel.class.getResource("/art/blueship2.png"));
+		blueShip3 = new ImageIcon(BoardPanel.class.getResource("/art/blueship3.png"));
+		redShip0 = new ImageIcon(BoardPanel.class.getResource("/art/redship0.png"));
+		redShip1 = new ImageIcon(BoardPanel.class.getResource("/art/redship1.png"));
+		redShip2 = new ImageIcon(BoardPanel.class.getResource("/art/redship2.png"));
+		redShip3 = new ImageIcon(BoardPanel.class.getResource("/art/redship3.png"));
 		frameWidth = fw;
 		frameHeight = fh;
 		setBounds(0,0,frameWidth-50,frameHeight-50);
@@ -36,15 +48,47 @@ public class BoardPanel extends JPanel
 				gbc.gridy = i;
 				if(board.getBoardAtCoordinates(i,j) == 0)
 				{
-					add(new JLabel(box),gbc);
+					add(new JLabel(space),gbc);
 				}
 				if(board.getBoardAtCoordinates(i,j) == 1)
 				{
-					add(new JLabel(ship1),gbc);
+					if(board.getShip1R() == 0)
+					{
+						add(new JLabel(blueShip0),gbc);
+					}
+					if(board.getShip1R() == 1)
+					{
+						add(new JLabel(blueShip1),gbc);
+					}
+					if(board.getShip1R() == 2)
+					{
+						add(new JLabel(blueShip2),gbc);
+					}
+					if(board.getShip1R() == 3)
+					{
+						add(new JLabel(blueShip3),gbc);
+					}
+					
 				}
 				if(board.getBoardAtCoordinates(i,j) == 2)
 				{
-					add(new JLabel(ship2),gbc);
+					if(board.getShip2R() == 0)
+					{
+						add(new JLabel(redShip0),gbc);
+					}
+					if(board.getShip2R() == 1)
+					{
+						add(new JLabel(redShip1),gbc);
+					}
+					if(board.getShip2R() == 2)
+					{
+						add(new JLabel(redShip2),gbc);
+					}
+					if(board.getShip2R() == 3)
+					{
+						add(new JLabel(redShip3),gbc);
+					}
+					
 				}
 			}
 		}
