@@ -1,4 +1,5 @@
 
+
 public class Board
 {
 	private int[][] board;
@@ -30,22 +31,20 @@ public class Board
 		{
 			if(ship1R == 0)
 			{
-				moved[1] -= movement[i][0];
-				moved[1] %=10;
+				moved[0] -= movement[i][0];
 			}
 			if(ship1R == 1)
 			{
-				moved[0] += movement[i][0];
-				moved[0]%=10;
+				moved[1] += movement[i][0];
 			}
 			if(ship1R == 2)
 			{
-				moved[1] += movement[i][0];
+				moved[0] += movement[i][0];
 				
 			}
 			if(ship1R == 3)
 			{
-				moved[0] -= movement[i][0];
+				moved[1] -= movement[i][0];
 			}
 			moved[1] %=10;
 			moved[0] %=10;
