@@ -87,7 +87,7 @@ public class GameMessage
         }
     }
 
-    private static GameMessage fromJSON(String json)
+    public static GameMessage fromJSON(String json)
     {
         JSONObject jsonObject;
         GameMessage message = new GameMessage();
