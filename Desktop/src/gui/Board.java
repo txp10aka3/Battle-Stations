@@ -25,45 +25,51 @@ public class Board
 		ship2R = 2;
 	}
 	
-	public void moveShip1(int[][] movement)
+	public void moveShip(int ship, int[][] movement)
 	{
-		int[] initial = getShip1Position(); 
-		int[] moved = getShip1Position();
+		int shipR = 0;
+		if(ship == 1) {shipR = ship1R;}
+		if(ship == 2) {shipR = ship2R;}
+		int[] initial = getShipPosition(ship); 
+		int[] moved = getShipPosition(ship);
 		for(int i = 0; i<movement.length; i++)
 		{
-			if(ship1R == 0)
+			if(shipR == 0)
 			{
 				moved[0] -= movement[i][0];
 			}
-			if(ship1R == 1)
+			if(shipR == 1)
 			{
 				moved[1] += movement[i][0];
 			}
-			if(ship1R == 2)
+			if(shipR == 2)
 			{
 				moved[0] += movement[i][0];
 				
 			}
-			if(ship1R == 3)
+			if(shipR == 3)
 			{
 				moved[1] -= movement[i][0];
 			}
 			moved[1] = modulo(moved[1], size);
 			moved[0] = modulo(moved[0], size);
-			ship1R += movement[i][1];
-			ship1R = modulo(ship1R,4);
+			shipR += movement[i][1];
+			shipR = modulo(shipR,4);
 		}
 		
 		board[initial[0]][initial[1]] = 0;
-		board[moved[0]][moved[1]] = 1;
+		board[moved[0]][moved[1]] = ship;
+		
+		if(ship == 1) {ship1R = shipR;}
+		if(ship == 2) {ship2R = shipR;}
 	}
-	public int[] getShip1Position()
+	public int[] getShipPosition(int ship)
 	{
 		for(int y = 0; y<board.length; y++)
 		{
 			for(int x = 0; x<board[y].length; x++)
 			{
-				if(board[y][x] == 1)
+				if(board[y][x] == ship)
 				{
 					return(new int[]{y,x});
 				}
@@ -71,9 +77,18 @@ public class Board
 		}
 		return null;
 	}
-	public int getShip1R()
+	public int getShipR(int ship)
 	{
-		return(ship1R);
+		if(ship == 1)
+		{
+			return(ship1R);
+		}
+		if(ship == 2)
+		{
+			return(ship2R);
+		}
+		return(-1);
+		
 	}
 	
 	public void moveShip2(int[][] movement)

@@ -7,7 +7,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import javax.swing.JFrame;
-
+import javax.swing.SwingUtilities;
 
 
 public class GameFrame extends JFrame
@@ -32,23 +32,23 @@ public class GameFrame extends JFrame
 
 			@Override
 			public void keyPressed(KeyEvent e) 
-			{
+			{	
 				if(e.getKeyCode()== e.VK_W)
 				{
-					board.moveShip1(new int[][] {{1,0},{0,0},{0,0}});
+					board.moveShip(1, new int[][] {{1,0},{0,0},{0,0}});
 				}
 				if(e.getKeyCode()== e.VK_A)
 				{
-					board.moveShip1(new int[][] {{1,-1},{0,0},{0,0}});
+					board.moveShip(1, new int[][] {{1,-1},{0,0},{0,0}});
 				}
 				if(e.getKeyCode()== e.VK_D)
 				{
-					board.moveShip1(new int[][] {{1,1},{0,0},{0,0}});
+					board.moveShip(1, new int[][] {{1,1},{0,0},{0,0}});
 					
 				}
 				if(e.getKeyCode()== e.VK_S)
 				{
-					board.moveShip1(new int[][] {{1,2},{0,0},{0,0}});
+					board.moveShip(1, new int[][] {{1,2},{0,0},{0,0}});
 				}
 				gameScreen.updateBoard();
 			}
@@ -68,11 +68,28 @@ public class GameFrame extends JFrame
 			}
 		
 		});
-		board.moveShip2(new int[][] {{1,1},{1,0},{3,0}});
+		board.moveShip(2, new int[][] {{1,1},{1,0},{3,0}});
 		gameScreen.updateBoard();
+		new Thread()
+		{
+			public void run()
+			{
+				try 
+				{
+					sleep(1000);
+				} catch (InterruptedException e) 
+				{
+					e.printStackTrace();
+				}
+				gameScreen.animate(2, new int[][] {{0,1},{1,1},{20,0}});
+			}
+		}.start();
+		
+		
 		
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
 	}
 	
 	public static void main(String[] args) 
