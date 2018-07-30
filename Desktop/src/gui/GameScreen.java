@@ -38,6 +38,7 @@ public class GameScreen extends JPanel
 			
 			for(int j = 0; j<movement.length; j++)
 			{
+				//remove(boardPanel);                              attempts to stop glitches 
 				if(j!=i)
 				{
 					moves[i][j] = new int[]{0,0};

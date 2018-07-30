@@ -24,17 +24,19 @@ public class BoardPanel extends JPanel
 	private ImageIcon redShip3;	
 	
 	private ImageIcon blueShip0b; 
+	private ImageIcon spaceb;
 	public BoardPanel(Board b, int fw, int fh)
 	{
 		space = new ImageIcon(BoardPanel.class.getResource("/art/emptySpace3.png"));
+		spaceb = new ImageIcon(BoardPanel.class.getResource("/art/emptySpace4.png"));
 		blueShip0 = new ImageIcon(BoardPanel.class.getResource("/art/dblueship30.png"));
 		blueShip1 = new ImageIcon(BoardPanel.class.getResource("/art/dblueship31.png"));
 		blueShip2 = new ImageIcon(BoardPanel.class.getResource("/art/dblueship32.png"));
 		blueShip3 = new ImageIcon(BoardPanel.class.getResource("/art/dblueship33.png"));
-		redShip0 = new ImageIcon(BoardPanel.class.getResource("/art/redship0.png"));
-		redShip1 = new ImageIcon(BoardPanel.class.getResource("/art/redship1.png"));
-		redShip2 = new ImageIcon(BoardPanel.class.getResource("/art/redship2.png"));
-		redShip3 = new ImageIcon(BoardPanel.class.getResource("/art/redship3.png"));
+		redShip0 = new ImageIcon(BoardPanel.class.getResource("/art/dredship30.png"));
+		redShip1 = new ImageIcon(BoardPanel.class.getResource("/art/dredship31.png"));
+		redShip2 = new ImageIcon(BoardPanel.class.getResource("/art/dredship32.png"));
+		redShip3 = new ImageIcon(BoardPanel.class.getResource("/art/dredship33.png"));
 		
 		blueShip0b = new ImageIcon(BoardPanel.class.getResource("/art/dblueship30b.png"));
 		
@@ -50,12 +52,20 @@ public class BoardPanel extends JPanel
 		{
 			for(int j = 0; j<board.getSize(); j++)
 			{
-				animation = (int) (Math.random()*2);
+				animation = (int) (Math.random()*3);
 				gbc.gridx = j;
 				gbc.gridy = i;
 				if(board.getBoardAtCoordinates(i,j) == 0)
 				{
-					add(new JLabel(space),gbc);
+					if(animation == 0)
+					{
+						add(new JLabel(spaceb),gbc);    // change for animation
+					}
+					else
+					{
+						add(new JLabel(spaceb),gbc);
+					}
+					
 				}
 				if(board.getBoardAtCoordinates(i,j) == 1)
 				{

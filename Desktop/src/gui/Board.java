@@ -4,9 +4,20 @@ package gui;
 public class Board
 {
 	private int[][] board;
+	private int size;
 	private int ship1R;
 	private int ship2R;
-	private int size;
+	private int ship1Scanners;
+	private int ship2Scanners;
+	private int ship1Stealth;
+	private int ship2Stealth;
+	private int[] ship1Shields;
+	private int[] ship2Shields;
+	private int[][] ship1Rkts;
+	private int[][] ship2Rkts;
+	
+	
+	
 	
 	public Board(int s)
 	{
@@ -17,14 +28,27 @@ public class Board
 			for(int x = 0; x<board[y].length; x++)
 			{
 				board[y][x] = 0;
+				if(y==x*2)
+				{
+					//board[y][x]=3;
+				}							
 			}
 		}
 		board[0][size-1] = 2;
 		board[size-1][0] = 1;
 		ship1R = 0;
 		ship2R = 2;
+		ship1Scanners = 0;
+		ship2Scanners = 0;
+		ship1Stealth = 0;
+		ship2Stealth = 0;
+		ship1Shields = new int[]{0,0,0,0};
+		ship2Shields = new int[]{0,0,0,0};
+		ship1Rkts = new int[][] {{0,0,0,0},{0,0,0,0}};
+		ship1Rkts = new int[][] {{0,0,0,0},{0,0,0,0}};
 	}
 	
+	//ship commands
 	public void moveShip(int ship, int[][] movement)
 	{
 		int shipR = 0;
@@ -58,11 +82,25 @@ public class Board
 		}
 		
 		board[initial[0]][initial[1]] = 0;
+		if(board[moved[0]][moved[1]] != 0)
+		{
+			if(board[moved[0]][moved[1]] == 1 || board[moved[0]][moved[1]] == 2)
+			{
+				setShipR(Math.abs(ship-3), getShipR(ship));   //just for testing
+				moveShip(Math.abs(ship-3), new int[][] {{1,0}});
+			}
+			if(board[moved[0]][moved[1]] ==3)
+			{
+				System.out.println("Crystal");
+			}
+		}
 		board[moved[0]][moved[1]] = ship;
 		
 		if(ship == 1) {ship1R = shipR;}
 		if(ship == 2) {ship2R = shipR;}
 	}
+	
+	//ship info
 	public int[] getShipPosition(int ship)
 	{
 		for(int y = 0; y<board.length; y++)
@@ -90,6 +128,120 @@ public class Board
 		return(-1);
 		
 	}
+	public void setShipR(int ship, int r)
+	{
+		if(ship == 1)
+		{
+			ship1R = r;
+		}
+		if(ship == 2)
+		{
+			ship2R = r;
+		}
+	}
+	
+	public int getShipScanners(int ship)
+	{
+		if(ship==1)
+		{
+			return(ship1Scanners);
+		}
+		if(ship==2)
+		{
+			return(ship2Scanners);
+		}
+		return(-1);
+	}
+	public void setShipScanners(int ship, int s)
+	{
+		if(ship==1)
+		{
+			ship1Scanners = s;
+		}
+		if(ship==2)
+		{
+			ship2Scanners = s;
+		}
+	}
+	
+	public int getShipStealth(int ship)
+	{
+		if(ship==1)
+		{
+			return(ship1Stealth);
+		}
+		if(ship==2)
+		{
+			return(ship2Stealth);
+		}
+		return(-1);
+	}
+	public void setShipStealth(int ship, int s)
+	{
+		if(ship==1)
+		{
+			ship1Stealth = s;
+		}
+		if(ship==2)
+		{
+			ship2Stealth = s;
+		}
+	}
+	
+	public int[] getShipShields(int ship)
+	{
+		if(ship==1)
+		{
+			return(ship1Shields);
+		}
+		if(ship==2)
+		{
+			return(ship2Shields);
+		}
+		return null;
+	}
+	
+	public void setShipShields(int ship, int[] s)
+	{
+		if(ship==1)
+		{
+			ship1Shields = s;
+		}
+		if(ship==2)
+		{
+			ship2Shields =s;
+		}
+	}
+	
+	
+	
+	//board
+	public int getSize()
+	{
+		return(size);
+	}
+	public int getBoardAtCoordinates(int y, int x)
+	{
+		return(board[y][x]);
+	}
+	
+	
+	//math
+	public int modulo(int n,int m)
+	{
+		return(((n%m)+m)%m);
+	}
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	//Redundant/old
 	
 	public void moveShip2(int[][] movement)
 	{
@@ -169,18 +321,5 @@ public class Board
 			}
 		}
 		return(-1);
-	}
-	
-	public int getSize()
-	{
-		return(size);
-	}
-	public int getBoardAtCoordinates(int y, int x)
-	{
-		return(board[y][x]);
-	}
-	public int modulo(int n,int m)
-	{
-		return(((n%m)+m)%m);
 	}
 }

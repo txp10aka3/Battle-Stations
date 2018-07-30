@@ -39,16 +39,16 @@ public class GameFrame extends JFrame
 				}
 				if(e.getKeyCode()== e.VK_A)
 				{
-					board.moveShip(1, new int[][] {{1,-1},{0,0},{0,0}});
+					board.moveShip(1, new int[][] {{0,-1},{0,0},{0,0}});
 				}
 				if(e.getKeyCode()== e.VK_D)
 				{
-					board.moveShip(1, new int[][] {{1,1},{0,0},{0,0}});
+					board.moveShip(1, new int[][] {{0,1},{0,0},{0,0}});
 					
 				}
 				if(e.getKeyCode()== e.VK_S)
 				{
-					board.moveShip(1, new int[][] {{1,2},{0,0},{0,0}});
+					board.moveShip(1, new int[][] {{0,2},{0,0},{0,0}});
 				}
 				gameScreen.updateBoard();
 			}
