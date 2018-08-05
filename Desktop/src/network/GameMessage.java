@@ -35,11 +35,11 @@ public class GameMessage
         trueContent = null;
     }
 
-    public static GameMessage generateStartMessage()
+    public static GameMessage generateStartMessage(String userName)
     {
         GameMessage message = new GameMessage();
         message.messageHeader = START_MESSAGE_TYPE;
-        message.messageContent = "";
+        message.messageContent = userName;
         return message;
     }
 
@@ -63,11 +63,11 @@ public class GameMessage
         return message;
     }
 
-    public static GameMessage generateStopMessage()
+    public static GameMessage generateStopMessage(String userName)
     {
         GameMessage message = new GameMessage();
         message.messageHeader = STOP_MESSAGE_TYPE;
-        message.messageContent = "";
+        message.messageContent = userName;
         return message;
     }
 
