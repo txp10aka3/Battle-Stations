@@ -1,11 +1,17 @@
 package gui;
 
-import java.util.Arrays;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.JPanel;
 
 public class GameScreen extends JPanel
 {
+	/**
+	 * Requested by JPanel
+	 */
+	private static final long serialVersionUID = 4988911646435079480L;
+	
 	private int frameWidth;
 	private int frameHeight;
 	private Board board;
@@ -20,6 +26,49 @@ public class GameScreen extends JPanel
 		boardPanel = new BoardPanel(board, frameWidth, frameHeight);
 		add(boardPanel);
 		
+		this.addKeyListener(new KeyListener() 
+		{
+
+			@Override
+			public void keyPressed(KeyEvent e) 
+			{	
+				if(e.getKeyCode()== KeyEvent.VK_W)
+				{
+					board.moveShip(1, new int[][] {{1,0},{0,0},{0,0}});
+				}
+				if(e.getKeyCode()== KeyEvent.VK_A)
+				{
+					board.moveShip(1, new int[][] {{0,-1},{0,0},{0,0}});
+				}
+				if(e.getKeyCode()== KeyEvent.VK_D)
+				{
+					board.moveShip(1, new int[][] {{0,1},{0,0},{0,0}});
+					
+				}
+				if(e.getKeyCode()== KeyEvent.VK_S)
+				{
+					board.moveShip(1, new int[][] {{0,2},{0,0},{0,0}});
+				}
+				updateBoard();
+			}
+
+			@Override
+			public void keyReleased(KeyEvent arg0)
+			{
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void keyTyped(KeyEvent arg0) 
+			{
+				// TODO Auto-generated method stub	
+			}
+		});
+		
+		/*
+		board.moveShip(2, new int[][] {{1,1},{1,0},{3,0}});
+		updateBoard();
+		*/
 	}
 	
 	public void updateBoard()

@@ -10,6 +10,11 @@ import javax.swing.JPanel;
 
 public class BoardPanel extends JPanel
 {
+	/**
+	 * Requested by JPanel
+	 */
+	private static final long serialVersionUID = -179733779629449527L;
+	
 	private int frameWidth;
 	private int frameHeight;
 	private Board board;
