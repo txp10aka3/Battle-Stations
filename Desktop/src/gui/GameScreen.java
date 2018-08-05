@@ -4,6 +4,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
 
 public class GameScreen extends JPanel
 {
@@ -25,6 +27,7 @@ public class GameScreen extends JPanel
 		board = b;
 		boardPanel = new BoardPanel(board, frameWidth, frameHeight);
 		add(boardPanel);
+		setFocusable(true);
 		
 		this.addKeyListener(new KeyListener() 
 		{
@@ -49,6 +52,10 @@ public class GameScreen extends JPanel
 				{
 					board.moveShip(1, new int[][] {{0,2},{0,0},{0,0}});
 				}
+				if(e.getKeyCode()== e.VK_SPACE)
+				{
+					board.fire(1);
+				}
 				updateBoard();
 			}
 
@@ -64,11 +71,33 @@ public class GameScreen extends JPanel
 				// TODO Auto-generated method stub	
 			}
 		});
+		new Thread()
+		{
+			public void run()
+			{
+				try 
+				{
+					sleep(1000);
+				} catch (InterruptedException e) 
+				{
+					e.printStackTrace();
+				}
+				
+				//server commands
+				board.setShipScanners(1, 3);
+				board.setShipShields(2, new int[] {0,0,0,0});
+				board.setShipStrength(1, 5);
+				board.setShipRkts(1, new int[][] {{0,1,2,3},{2,1,2,3}});
+				
+				
+				/*
+				board.moveShip(2, new int[][] {{1,1},{1,0},{3,0}});
+				updateBoard();
+				*/
+				//animate(2, new int[][]{{1,1},{1,0},{3,0}});
+			}
+		}.start();
 		
-		/*
-		board.moveShip(2, new int[][] {{1,1},{1,0},{3,0}});
-		updateBoard();
-		*/
 	}
 	
 	public void updateBoard()

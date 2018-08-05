@@ -32,7 +32,6 @@ public class GameFrame extends JFrame
 		frameWidth = screenSize.width;
 		frameHeight = screenSize.height;
 		setBounds(0,0,frameWidth,frameHeight);
-		isOpaque();
 		board = new Board(10);
 		gameScreen = new GameScreen(board, frameWidth, frameHeight);
 		add(gameScreen);
