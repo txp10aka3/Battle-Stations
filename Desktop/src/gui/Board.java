@@ -226,6 +226,8 @@ public class Board
 		int[] distance = new int[2];
 		distance[0] = ship1P[0]-ship2P[0];
 		distance[1] = ship1P[1]-ship2P[1];
+		int directionFired = 0;
+		int sidehit = 10;
 		
 		if(ship == 1)
 		{
@@ -237,7 +239,31 @@ public class Board
 			{
 				hit = false;
 			}
-			if(distance[0]>distance[1])
+			if(Math.abs(distance[0])>Math.abs(distance[1]))
+			{
+				if(distance[0]>0)
+				{
+					directionFired = 0;
+				}
+				else
+				{
+					directionFired = 2;
+				}
+				
+			}
+			else
+			{
+				if(distance[1]>0)
+				{
+					directionFired = 3;
+				}
+				else
+				{
+					directionFired = 1;
+				}
+			}
+	
+			sidehit = (ship1R-2+4)%4;
 				
 			if(ship1Strength>ship1Shields[0])
 			{
