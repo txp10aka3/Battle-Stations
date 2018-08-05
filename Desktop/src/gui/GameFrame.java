@@ -3,11 +3,15 @@ package gui;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 import com.esotericsoftware.kryonet.Server;
+
+import network.GamePlayer;
 
 public class GameFrame extends JFrame
 {
@@ -23,8 +27,10 @@ public class GameFrame extends JFrame
 	private int frameHeight;
 	private GameScreen gameScreen;
 	private Board board;
+	private JPanel panel;
 	
 	private Server server;
+	private ArrayList<GamePlayer> players;
 	
 	public GameFrame()
 	{
@@ -32,9 +38,9 @@ public class GameFrame extends JFrame
 		frameWidth = screenSize.width;
 		frameHeight = screenSize.height;
 		setBounds(0,0,frameWidth,frameHeight);
-		isOpaque();
 		board = new Board(10);
 		
+		players = null;
 		server = new Server();
 		server.start();
 		try 
@@ -47,11 +53,43 @@ public class GameFrame extends JFrame
 			JOptionPane.showMessageDialog(null, "Networking Not Found!");
 		}
 		
-		gameScreen = new GameScreen(board, server, frameWidth, frameHeight);
-		add(gameScreen);
+		/*
+		 * gameScreen = new GameScreen(board, server, frameWidth, frameHeight);
+		 * add(gameScreen);
+		 */
 		
+		goToStartScreen();
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+	}
+	
+	public void goToStartScreen()
+	{
+		swapPanel(new StartScreen());
+	}
+	
+	public void goToPlayersScreen()
+	{
+		swapPanel(new PlayerScreen());
+	}
+	
+	public void gotToGameScreen(ArrayList<GamePlayer> player)
+	{
+		players.addAll(player);
+		swapPanel(new GameScreen(board, server, players, frameWidth, frameHeight));
+	}
+	
+	private void swapPanel(JPanel newFrame)
+	{
+		if(panel != null)
+			this.remove(panel);
+		this.add(panel);
+		this.revalidate();
+	}
+	
+	public Server getServer()
+	{
+		return server;
 	}
 	
 	public static void main(String[] args) 
