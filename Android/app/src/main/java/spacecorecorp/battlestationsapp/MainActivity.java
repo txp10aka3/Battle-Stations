@@ -36,7 +36,6 @@ public class MainActivity extends Activity
     private Button buttonProceed;
 
     private NsdManager nsdManager;
-    private GameDiscoveryListener discoveryListener;
     private InetAddress foundAddress;
 
     @Override
@@ -60,25 +59,7 @@ public class MainActivity extends Activity
 
         if(nsdManager != null)
         {
-            discoveryListener = new GameDiscoveryListener(nsdManager, new NsdManager.ResolveListener()
-            {
-                @Override
-                public void onResolveFailed(NsdServiceInfo nsdServiceInfo, int i)
-                {
-                    Log.d(LOG_TAG, "onResolveFailed");
-                }
-
-                @Override
-                public void onServiceResolved(NsdServiceInfo nsdServiceInfo)
-                {
-                    if(nsdServiceInfo.getServiceType().equals(SERVICE_TYPE))
-                    {
-                        foundAddress = nsdServiceInfo.getHost();
-                    }
-                    Log.d(LOG_TAG, "onServiceResolved : " + nsdServiceInfo.getServiceType());
-                }
-            });
-            nsdManager.discoverServices(SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, discoveryListener);
+            //TODO: Search for IP Address
         }
 
         buttonProceed.setOnClickListener(new View.OnClickListener()
@@ -149,8 +130,7 @@ public class MainActivity extends Activity
     protected void onStop()
     {
         super.onStop();
-        if(nsdManager != null && discoveryListener != null && setUpPermissions())
-            nsdManager.stopServiceDiscovery(discoveryListener);
+        //TODO: Stop Discovery
     }
 
     private boolean setUpPermissions()
