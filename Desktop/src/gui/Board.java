@@ -15,6 +15,9 @@ public class Board
 	private int[] ship2Shields;
 	private int[][] ship1Rkts;
 	private int[][] ship2Rkts;
+	private int ship1Strength;
+	private int ship2Strength;
+	
 	
 	
 	
@@ -45,7 +48,9 @@ public class Board
 		ship1Shields = new int[]{0,0,0,0};
 		ship2Shields = new int[]{0,0,0,0};
 		ship1Rkts = new int[][] {{0,0,0,0},{0,0,0,0}};
-		ship1Rkts = new int[][] {{0,0,0,0},{0,0,0,0}};
+		ship2Rkts = new int[][] {{0,0,0,0},{0,0,0,0}};
+		ship1Strength = 0;
+		ship2Strength = 0;
 	}
 	
 	//ship commands
@@ -211,6 +216,36 @@ public class Board
 		{
 			ship2Shields =s;
 		}
+	}
+	
+	public boolean fire(int ship)
+	{
+		boolean hit = false;
+		int[] ship1P = getShipPosition(1);
+		int[] ship2P = getShipPosition(2);
+		int[] distance = new int[2];
+		distance[0] = ship1P[0]-ship2P[0];
+		distance[1] = ship1P[1]-ship2P[1];
+		
+		if(ship == 1)
+		{
+			if(ship1Scanners>ship2Stealth)
+			{
+				hit = true;
+			}
+			else 
+			{
+				hit = false;
+			}
+			if(distance[0]>distance[1])
+				
+			if(ship1Strength>ship1Shields[0])
+			{
+				
+			}
+		}
+		
+		return(false);
 	}
 	
 	
