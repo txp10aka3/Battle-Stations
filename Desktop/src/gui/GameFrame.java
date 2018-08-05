@@ -34,8 +34,6 @@ public class GameFrame extends JFrame
 		setBounds(0,0,frameWidth,frameHeight);
 		isOpaque();
 		board = new Board(10);
-		gameScreen = new GameScreen(board, frameWidth, frameHeight);
-		add(gameScreen);
 		
 		server = new Server();
 		server.start();
@@ -49,9 +47,11 @@ public class GameFrame extends JFrame
 			JOptionPane.showMessageDialog(null, "Networking Not Found!");
 		}
 		
+		gameScreen = new GameScreen(board, server, frameWidth, frameHeight);
+		add(gameScreen);
+		
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		
 	}
 	
 	public static void main(String[] args) 

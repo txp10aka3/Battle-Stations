@@ -5,6 +5,10 @@ import java.awt.event.KeyListener;
 
 import javax.swing.JPanel;
 
+import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.Listener;
+import com.esotericsoftware.kryonet.Server;
+
 public class GameScreen extends JPanel
 {
 	/**
@@ -17,7 +21,7 @@ public class GameScreen extends JPanel
 	private Board board;
 	private BoardPanel boardPanel;
 	
-	public GameScreen(Board b, int fw, int fh) 
+	public GameScreen(Board b, Server server, int fw, int fh) 
 	{
 		frameWidth = fw;
 		frameHeight = fh;
@@ -26,26 +30,32 @@ public class GameScreen extends JPanel
 		boardPanel = new BoardPanel(board, frameWidth, frameHeight);
 		add(boardPanel);
 		
+		server.addListener(new Listener()
+		{
+			 public void received (Connection connection, Object object) 
+			 {
+				 
+			 }
+		});
+		
 		this.addKeyListener(new KeyListener() 
 		{
-
 			@Override
 			public void keyPressed(KeyEvent e) 
 			{	
-				if(e.getKeyCode()== KeyEvent.VK_W)
+				if(e.getKeyCode() == KeyEvent.VK_W)
 				{
 					board.moveShip(1, new int[][] {{1,0},{0,0},{0,0}});
 				}
-				if(e.getKeyCode()== KeyEvent.VK_A)
+				if(e.getKeyCode() == KeyEvent.VK_A)
 				{
 					board.moveShip(1, new int[][] {{0,-1},{0,0},{0,0}});
 				}
-				if(e.getKeyCode()== KeyEvent.VK_D)
+				if(e.getKeyCode() == KeyEvent.VK_D)
 				{
 					board.moveShip(1, new int[][] {{0,1},{0,0},{0,0}});
-					
 				}
-				if(e.getKeyCode()== KeyEvent.VK_S)
+				if(e.getKeyCode() == KeyEvent.VK_S)
 				{
 					board.moveShip(1, new int[][] {{0,2},{0,0},{0,0}});
 				}
