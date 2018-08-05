@@ -1,5 +1,7 @@
 package gui;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -16,7 +18,12 @@ public class StartScreen extends JPanel
 
 	public StartScreen()
 	{
+		GridBagConstraints gbc = new GridBagConstraints();
+		setLayout(new GridBagLayout());
+		
 		JButton start = new JButton("Start Game");
+		add(start, gbc);
+		
 		StartScreen panel = this;
 		start.addActionListener(new ActionListener()
 		{

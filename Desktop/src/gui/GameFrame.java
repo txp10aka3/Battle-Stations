@@ -83,8 +83,9 @@ public class GameFrame extends JFrame
 	{
 		if(panel != null)
 			this.remove(panel);
-		this.add(panel);
+		this.add(newFrame);
 		this.revalidate();
+		panel = newFrame;
 	}
 	
 	public Server getServer()
