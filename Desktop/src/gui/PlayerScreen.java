@@ -27,10 +27,12 @@ public class PlayerScreen extends JPanel
 	private static final long serialVersionUID = -2036219615503141028L;
 
 	private ArrayList<GamePlayer> players;
+	private PlayerPanel panel;
 	
 	public PlayerScreen(Server server)
 	{
 		players = new ArrayList<>();
+		panel = new PlayerPanel();
 	
 		GridBagConstraints gbc = new GridBagConstraints();
 		this.setLayout(new GridBagLayout());
@@ -42,7 +44,8 @@ public class PlayerScreen extends JPanel
 		gbc.gridx = gbc.gridy = 0;
 		this.add(titleLabel, gbc);
 		
-		
+		gbc.gridy++;
+		this.add(panel, gbc);
 		
 		server.addListener(new Listener()
 		{
@@ -60,13 +63,13 @@ public class PlayerScreen extends JPanel
 				 		GamePlayer leavingPlayer = new GamePlayer(gameMessage.messageContent, 
 				 				connection.getRemoteAddressTCP().getAddress());
 				 		players.remove(leavingPlayer);
-				 		//TODO: React Better to In-Game Loss
+				 		//TODO: Add List Update
 				 		break;
 				 	case GameMessage.START_MESSAGE_TYPE:
 				 		GamePlayer joiningPlayer = new GamePlayer(gameMessage.messageContent, 
 				 				connection.getRemoteAddressTCP().getAddress());
 				 		players.add(joiningPlayer);
-				 		//TODO: React Better to In-Game Gain
+				 		//TODO: Add List Update
 				 		break;
 				 }
 			 }
