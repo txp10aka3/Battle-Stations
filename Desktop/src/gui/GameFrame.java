@@ -70,7 +70,7 @@ public class GameFrame extends JFrame
 	
 	public void goToPlayersScreen()
 	{
-		swapPanel(new PlayerScreen());
+		swapPanel(new PlayerScreen(server));
 	}
 	
 	public void gotToGameScreen(ArrayList<GamePlayer> player)
