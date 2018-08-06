@@ -217,28 +217,70 @@ public class Board
 			ship2Shields =s;
 		}
 	}
+	public int getShipStrength(int ship)
+	{
+		if(ship==1)
+		{
+			return(ship1Strength);
+		}
+		if(ship==2)
+		{
+			return(ship2Strength);
+		}
+		return -1;
+	}
+	public void setShipStrength(int ship, int s)
+	{
+		if(ship==1)
+		{
+			ship1Strength = s;
+		}
+		if(ship==2)
+		{
+			ship2Strength =s;
+		}
+	}
+	public int[][] getShipRkts(int ship)
+	{
+		if(ship==1)
+		{
+			return(ship1Rkts);
+		}
+		if(ship==2)
+		{
+			return(ship2Rkts);
+		}
+		return(null);
+	}
+	public void setShipRkts(int ship, int[][] rkts)
+	{
+		if(ship==1)
+		{
+			ship1Rkts = rkts;
+		}
+		if(ship==2)
+		{
+			ship2Rkts = rkts;
+		}
+	}
 	
 	public boolean fire(int ship)
 	{
-		boolean hit = false;
+		System.out.print("firing");
+		boolean hit = true;
 		int[] ship1P = getShipPosition(1);
 		int[] ship2P = getShipPosition(2);
 		int[] distance = new int[2];
-		distance[0] = ship1P[0]-ship2P[0];
-		distance[1] = ship1P[1]-ship2P[1];
+		int rkt = 0;
 		int directionFired = 0;
 		int sidehit = 10;
 		
 		if(ship == 1)
 		{
-			if(ship1Scanners>ship2Stealth)
-			{
-				hit = true;
-			}
-			else 
-			{
-				hit = false;
-			}
+			System.out.print("firing1");
+			distance[0] = ship1P[0]-ship2P[0];
+			distance[1] = ship1P[1]-ship2P[1];
+			
 			if(Math.abs(distance[0])>Math.abs(distance[1]))
 			{
 				if(distance[0]>0)
@@ -251,6 +293,10 @@ public class Board
 				}
 				
 			}
+			if(Math.abs(distance[0])==Math.abs(distance[1]))
+			{
+				directionFired = ship1R;
+			}
 			else
 			{
 				if(distance[1]>0)
@@ -262,16 +308,160 @@ public class Board
 					directionFired = 1;
 				}
 			}
-	
-			sidehit = (ship1R-2+4)%4;
-				
-			if(ship1Strength>ship1Shields[0])
+			if(modulo(ship1R+2,4) == directionFired) //ship facing wrong way
 			{
+				if(ship1Rkts[0][0] == 2 || ship1Rkts[1][0] == 2)
+				{
+					rkt = 2;
+				}
+				else
+				{
+					System.out.print("Wrong way");
+					distance[0]+=4;
+					rkt = 0;
+				}
+			}
+			int i;
+			for(i = 0; i<2; i++)
+			{
+				if(ship1Rkts[i][0]==rkt)
+				{
+					ship1Rkts[i] = new int[]{10,0,0,0};
+					i+=10;
+				}
+			}
+			if(i<=3)
+			{
+				System.out.println("Nothing Fired");
+				return(false);
+			}
+			
+			if(ship1Scanners>=ship2Stealth+Math.abs(distance[0])+Math.abs(distance[1]))
+			{
+				//good
+				System.out.print("Locked on to ship2");
+				System.out.print(""+(ship2Stealth+Math.abs(distance[0])+Math.abs(distance[1])));
 				
+				if(ship2R == directionFired)
+				{
+					sidehit = 2;
+				}
+				else if(modulo(ship2R+2, 4) == directionFired)
+				{
+					sidehit = 0;
+				}
+				else if(ship2R%2 != 0)
+				{
+					sidehit = modulo(ship2R+directionFired,4);
+				}
+				else if(ship2R%2 == 0)
+				{
+					sidehit = modulo(ship2R-directionFired,4);
+				}
+				
+					
+				if(ship1Strength>ship2Shields[sidehit])
+				{
+					//good
+					System.out.println("Ship2 hit!. Side:"+sidehit);
+				}
+				else
+				{
+					hit = false;
+				}
+			}
+			else 
+			{
+				hit = false;
+				System.out.print("Failed to lock on");
+			}
+			
+	
+			
+		}
+		
+		if(ship == 2) //needs to be updated to match ship 1
+		{
+			distance[0] = ship2P[0]-ship1P[0];
+			distance[1] = ship2P[1]-ship1P[1];
+			
+			if(Math.abs(distance[0])>Math.abs(distance[1]))
+			{
+				if(distance[0]>0)
+				{
+					directionFired = 0;
+				}
+				else
+				{
+					directionFired = 2;
+				}
+				
+			}
+			if(Math.abs(distance[0])==Math.abs(distance[1]))
+			{
+				directionFired = ship2R;
+			}
+			else
+			{
+				if(distance[1]>0)
+				{
+					directionFired = 3;
+				}
+				else
+				{
+					directionFired = 1;
+				}
+			}
+			if(modulo(ship2R+2,4) == directionFired)
+			{
+				distance[0]+=4;
+			}
+			
+			if(ship2Scanners>ship1Stealth)
+			{
+				//good
+				System.out.print("Locked on to ship1");
+			}
+			else 
+			{
+				hit = false;
+			}
+			
+	
+			if(ship1R == directionFired)
+			{
+				sidehit = 2;
+			}
+			else if(modulo(ship1R+2, 4) == directionFired)
+			{
+				sidehit = 0;
+			}
+			else if(ship1R%2 != 0)
+			{
+				sidehit = modulo(ship1R+directionFired,4);
+			}
+			else if(ship1R%2 == 0)
+			{
+				sidehit = modulo(ship1R-directionFired,4);
+			}
+			
+				
+			if(ship2Strength>ship1Shields[sidehit])
+			{
+				//good
+				System.out.println("Ship1 hit! Side:"+sidehit);
+			}
+			else
+			{
+				hit = false;
 			}
 		}
 		
-		return(false);
+		if(hit == false)
+		{
+			System.out.println("You missed");
+		}
+		return(hit);
 	}
 	
 	
