@@ -3,40 +3,47 @@ package spacecorecorp.battlestationsapp;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
-import android.net.nsd.NsdManager;
-import android.net.nsd.NsdServiceInfo;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryonet.Client;
+import com.esotericsoftware.kryonet.Listener;
+
+import java.io.IOException;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
 
-import spacecorecorp.battlestationsapp.network.GameDiscoveryListener;
+import spacecorecorp.battlestationsapp.network.GameMessage;
 import spacecorecorp.battlestationsapp.network.ParseIPAddressTask;
 
-public class MainActivity extends Activity
+public class MainActivity extends Activity implements View.OnClickListener
 {
     private static final String SERVICE_TYPE = "_spacegame._tcp";
     private static final String LOG_TAG = "MainActivity";
     private static final int PERMISSIONS_KEY = 5312;
+    private static final int TCP_PORT = 35330;
+    private static final int UDP_PORT = 35333;
 
     private EditText editTextName;
     private EditText editTextIP;
     private Button buttonProceed;
 
+    /*
     private NsdManager nsdManager;
     private InetAddress foundAddress;
+    */
+
+    private Client client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -55,63 +62,115 @@ public class MainActivity extends Activity
         else
             Log.d(LOG_TAG, "onCreate");
 
-        nsdManager = (NsdManager) getSystemService(Context.NSD_SERVICE);
+        buttonProceed.setOnClickListener(this);
+    }
 
-        if(nsdManager != null)
+    @Override
+    public void onClick(View view)
+    {
+        if(editTextName.getText().toString().equals(""))
         {
-            //TODO: Search for IP Address
+            new AlertDialog.Builder(getActivity())
+                    .setNeutralButton("OK", null)
+                    .setTitle("Invalid Input")
+                    .setMessage("Please Enter in a User Name")
+                    .create()
+                    .show();
         }
-
-        buttonProceed.setOnClickListener(new View.OnClickListener()
+        else
         {
-            @Override
-            public void onClick(View view)
+            InetAddress ipAddress = null;
+            if(editTextIP.getText().toString().equals(""))
+            {
+                new AlertDialog.Builder(getActivity())
+                        .setNeutralButton("OK", null)
+                        .setTitle("Invalid Input")
+                        .setMessage("Please Enter a Valid Address")
+                        .create()
+                        .show();
+                return;
+            }
+            else
+            {
+                try
+                {
+                    ipAddress = new ParseIPAddressTask(editTextIP.getText().toString()).get(500, TimeUnit.MILLISECONDS);
+                }
+                catch (Exception ex)
+                {
+                    ex.printStackTrace();
+                }
+            }
+
+            if(ipAddress == null)
+            {
+                new AlertDialog.Builder(getActivity())
+                        .setNeutralButton("OK", null)
+                        .setTitle("Could Not Find Server")
+                        .setMessage("Please Check the Validity of the IP Address and/or Your Network Connection")
+                        .create()
+                        .show();
+            }
+            else
             {
                 if(editTextName.getText().toString().equals(""))
                 {
                     new AlertDialog.Builder(getActivity())
                             .setNeutralButton("OK", null)
-                            .setTitle("Invalid Input")
-                            .setMessage("Please Enter in a User Name")
+                            .setTitle("Please Enter A Name")
+                            .setMessage("Enter the User Name You Would Like to Be Initially Identified By")
                             .create()
                             .show();
                 }
                 else
                 {
-                    InetAddress ipAddress = null;
-                    if(editTextIP.getText().toString().equals(""))
-                    {
-                        ipAddress = foundAddress;
-                    }
-                    else
-                    {
-                        try
-                        {
-                            ipAddress = new ParseIPAddressTask(editTextIP.getText().toString()).get(500, TimeUnit.MILLISECONDS);
-                        }
-                        catch (Exception ex)
-                        {
-                            ex.printStackTrace();
-                            ipAddress = null;
-                        }
-                    }
-
-                    if(ipAddress == null)
-                    {
-                        new AlertDialog.Builder(getActivity())
-                                .setNeutralButton("OK", null)
-                                .setTitle("Invalid Input")
-                                .setMessage("Please Check the Validity of the IP Address")
-                                .create()
-                                .show();
-                    }
-                    else
-                    {
-                        //TODO: Start Some Connection
-                    }
+                    startConnection(ipAddress, editTextName.getText().toString());
                 }
             }
-        });
+        }
+    }
+
+    private void startConnection(InetAddress address, String userName)
+    {
+        client = new Client();
+        client.start();
+
+        try
+        {
+            Toast.makeText(getApplicationContext(), "Attempting Connection", Toast.LENGTH_SHORT).show();
+            client.connect(5000, address, TCP_PORT, UDP_PORT);
+        }
+        catch (IOException ioe)
+        {
+            ioe.printStackTrace();
+            Toast.makeText(getApplicationContext(), "Connection Failed!", Toast.LENGTH_SHORT).show();
+        }
+
+        Kryo kryo = client.getKryo();
+        kryo.register(GameMessage.class);
+
+        client.sendTCP(GameMessage.generateStartMessage(userName));
+
+        ActivityDataCache.getInstance().setUsername(userName);
+        ActivityDataCache.getInstance().setClient(client);
+        Intent waitingRoomIntent = new Intent(getApplicationContext(), WaitRoomActivity.class);
+        startActivity(waitingRoomIntent);
+    }
+
+    private boolean setUpPermissions()
+    {
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_WIFI_STATE) != PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.CHANGE_WIFI_MULTICAST_STATE) != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET, Manifest.permission.READ_PHONE_STATE,
+                    Manifest.permission.ACCESS_WIFI_STATE, Manifest.permission.CHANGE_WIFI_MULTICAST_STATE}, PERMISSIONS_KEY);
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
 
     @Override
@@ -130,23 +189,6 @@ public class MainActivity extends Activity
     protected void onStop()
     {
         super.onStop();
-        //TODO: Stop Discovery
-    }
-
-    private boolean setUpPermissions()
-    {
-        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_WIFI_STATE) != PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.CHANGE_WIFI_MULTICAST_STATE) != PackageManager.PERMISSION_GRANTED)
-        {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET, Manifest.permission.READ_PHONE_STATE,
-                    Manifest.permission.ACCESS_WIFI_STATE, Manifest.permission.CHANGE_WIFI_MULTICAST_STATE}, PERMISSIONS_KEY);
-            return false;
-        }
-        else
-        {
-            return true;
-        }
     }
 
     private Activity getActivity()
