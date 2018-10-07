@@ -1,5 +1,6 @@
 package spacecorecorp.battlestationsapp;
 
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,7 +9,6 @@ import android.widget.Toast;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import com.google.android.material.snackbar.Snackbar;
 import com.skyfishjy.library.RippleBackground;
 
 import spacecorecorp.battlestationsapp.network.GameMessage;
