@@ -68,14 +68,50 @@ public class WaitRoomActivity extends AppCompatActivity
                     Toast.makeText(getApplicationContext(), "Classless Message Received!", Toast.LENGTH_SHORT).show();
                 }
             }
+
+            public void connected (Connection connection)
+            {
+                if(!ripple.isRippleAnimationRunning())
+                    ripple.startRippleAnimation();
+            }
+
+            public void disconnected (Connection connection)
+            {
+                if(ripple.isRippleAnimationRunning())
+                    ripple.stopRippleAnimation();
+            }
         };
 
         receivedClient.addListener(listener);
+
+        if(receivedClient.isConnected() && !ripple.isRippleAnimationRunning())
+            ripple.startRippleAnimation();
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        if(receivedClient.isConnected() && !ripple.isRippleAnimationRunning())
+            ripple.startRippleAnimation();
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+
+        if(ripple.isRippleAnimationRunning())
+            ripple.stopRippleAnimation();
     }
 
     @Override
     protected void onStop()
     {
+        if(ripple.isRippleAnimationRunning())
+            ripple.stopRippleAnimation();
+
         receivedClient.removeListener(listener);
         super.onStop();
     }
