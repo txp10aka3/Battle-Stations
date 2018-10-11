@@ -26,4 +26,8 @@ public class GamePlayer
 		GamePlayer otherPlayer = (GamePlayer) other;
 		return otherPlayer.userName.equals(this.userName);
 	}
+	public String getName()
+	{
+		return(userName);
+	}
 }
