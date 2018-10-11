@@ -4,9 +4,12 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -46,6 +49,10 @@ public class PlayerScreen extends JPanel
 		gbc.gridy++;
 		this.add(panel, gbc);
 		
+		JButton readyButton = new JButton("Ready to Begin?");
+		gbc.gridy++;
+		this.add(readyButton, gbc);
+		
 		server.addListener(new Listener()
 		{
 			 public void received (Connection connection, Object object) 
@@ -72,6 +79,32 @@ public class PlayerScreen extends JPanel
 				 		break;
 				 }
 			 }
+		});
+		
+		readyButton.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+				for(GamePlayer player : players)
+				{
+					if(player.position == null)
+					{
+						JOptionPane.showMessageDialog(null, "Player Without Role!");
+						return;
+					}
+				}
+				
+				for(GamePlayer player : players)
+				{
+					GameMessage startMessage = GameMessage.generateStartMessage(player.userName);
+					startMessage.team = player.team;
+					startMessage.position = player.position;
+					server.sendToAllTCP(startMessage);
+				}
+				
+				//TODO: Handle Start of GameScreen
+			}
 		});
 	}
 }
