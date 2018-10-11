@@ -20,7 +20,6 @@ import network.GamePlayer;
 
 public class PlayerScreen extends JPanel 
 {
-
 	/**
 	 * Requested by JPanel
 	 */
@@ -63,13 +62,13 @@ public class PlayerScreen extends JPanel
 				 		GamePlayer leavingPlayer = new GamePlayer(gameMessage.messageContent, 
 				 				connection.getRemoteAddressTCP().getAddress());
 				 		players.remove(leavingPlayer);
-				 		//TODO: Add List Update
+				 		panel.updateList(players);
 				 		break;
 				 	case GameMessage.START_MESSAGE_TYPE:
 				 		GamePlayer joiningPlayer = new GamePlayer(gameMessage.messageContent, 
 				 				connection.getRemoteAddressTCP().getAddress());
 				 		players.add(joiningPlayer);
-				 		//TODO: Add List Update
+				 		panel.updateList(players);
 				 		break;
 				 }
 			 }

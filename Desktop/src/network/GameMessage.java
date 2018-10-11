@@ -63,11 +63,11 @@ public class GameMessage
         return message;
     }
 
-    public static GameMessage generateStopMessage(String userName)
+    public static GameMessage generateStopMessage()
     {
         GameMessage message = new GameMessage();
         message.messageHeader = STOP_MESSAGE_TYPE;
-        message.messageContent = userName;
+        message.messageContent = "";
         return message;
     }
 

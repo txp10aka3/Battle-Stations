@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 
 import com.esotericsoftware.kryonet.Server;
 
+import network.GameMessage;
 import network.GamePlayer;
 
 public class GameFrame extends JFrame
@@ -52,6 +53,8 @@ public class GameFrame extends JFrame
 			e1.printStackTrace();
 			JOptionPane.showMessageDialog(null, "Networking Not Found!");
 		}
+		
+		server.getKryo().register(GameMessage.class);
 		
 		/*
 		 * gameScreen = new GameScreen(board, server, frameWidth, frameHeight);
