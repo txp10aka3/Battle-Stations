@@ -38,16 +38,16 @@ public class GameFrame extends JFrame
 		screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		frameWidth = screenSize.width;
 		frameHeight = screenSize.height;
-		setBounds(0,0,frameWidth,frameHeight);
+		setBounds(0, 0, frameWidth, frameHeight);
 		board = new Board(10);
 		
 		players = null;
 		server = new Server();
 		server.start();
-		try 
+		try
 		{
 			server.bind(TCP_PORT, UPD_PORT);
-		} 
+		}
 		catch (IOException e1) 
 		{
 			e1.printStackTrace();
