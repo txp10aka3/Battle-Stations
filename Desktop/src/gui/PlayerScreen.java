@@ -14,12 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.Listener;
-import com.esotericsoftware.kryonet.Server;
-
-import network.GameMessage;
-import network.GamePlayer;
+import network.player.GamePlayer;
 
 public class PlayerScreen extends JPanel 
 {
@@ -31,7 +26,7 @@ public class PlayerScreen extends JPanel
 	private ArrayList<GamePlayer> players;
 	private PlayerPanel panel;
 	
-	public PlayerScreen(Server server)
+	public PlayerScreen(/*Server server*/)
 	{
 		players = new ArrayList<>();
 		panel = new PlayerPanel();
@@ -53,6 +48,7 @@ public class PlayerScreen extends JPanel
 		gbc.gridy++;
 		this.add(readyButton, gbc);
 		
+		/*
 		server.addListener(new Listener()
 		{
 			 public void received (Connection connection, Object object) 
@@ -80,29 +76,13 @@ public class PlayerScreen extends JPanel
 				 }
 			 }
 		});
+		*/
 		
 		readyButton.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e) 
-			{
-				for(GamePlayer player : players)
-				{
-					if(player.position == null)
-					{
-						JOptionPane.showMessageDialog(null, "Player Without Role!");
-						return;
-					}
-				}
-				
-				for(GamePlayer player : players)
-				{
-					GameMessage startMessage = GameMessage.generateStartMessage(player.userName);
-					startMessage.team = player.team;
-					startMessage.position = player.position;
-					server.sendToAllTCP(startMessage);
-				}
-				
+			{			
 				//TODO: Handle Start of GameScreen
 			}
 		});

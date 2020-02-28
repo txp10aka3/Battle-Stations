@@ -9,10 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import com.esotericsoftware.kryonet.Server;
-
-import network.GameMessage;
-import network.GamePlayer;
+import network.player.GamePlayer;
 
 public class GameFrame extends JFrame
 {
@@ -30,7 +27,7 @@ public class GameFrame extends JFrame
 	private Board board;
 	private JPanel panel;
 	
-	private Server server;
+	//private Server server;
 	private ArrayList<GamePlayer> players;
 	
 	public GameFrame()
@@ -42,6 +39,7 @@ public class GameFrame extends JFrame
 		board = new Board(10);
 		
 		players = null;
+		/*
 		server = new Server();
 		server.start();
 		try
@@ -55,6 +53,7 @@ public class GameFrame extends JFrame
 		}
 		
 		server.getKryo().register(GameMessage.class);
+		*/
 		
 		/*
 		 * gameScreen = new GameScreen(board, server, frameWidth, frameHeight);
@@ -73,13 +72,13 @@ public class GameFrame extends JFrame
 	
 	public void goToPlayersScreen()
 	{
-		swapPanel(new PlayerScreen(server));
+		swapPanel(new PlayerScreen(/*server*/));
 	}
 	
 	public void gotToGameScreen(ArrayList<GamePlayer> player)
 	{
 		players.addAll(player);
-		swapPanel(new GameScreen(board, server, players, frameWidth, frameHeight));
+		swapPanel(new GameScreen(board, /*server,*/ players, frameWidth, frameHeight));
 	}
 	
 	private void swapPanel(JPanel newFrame)
@@ -91,13 +90,10 @@ public class GameFrame extends JFrame
 		panel = newFrame;
 	}
 	
+	/*
 	public Server getServer()
 	{
 		return server;
 	}
-	
-	public static void main(String[] args) 
-	{
-		new GameFrame();
-	}
+	*/
 }

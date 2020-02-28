@@ -1,20 +1,12 @@
-package network;
-
-import java.net.InetAddress;
+package network.player;
 
 public class GamePlayer 
 {
 	public String userName;
-	public InetAddress ip;
-	public GameMessage.TEAM team;
-	public GameMessage.POSITION position;
 	
-	public GamePlayer(String userName, InetAddress ip)
+	public GamePlayer(String userName)
 	{
 		this.userName = userName;
-		this.ip = ip;
-		team = null;
-		position = null;
 	}
 	
 	@Override
@@ -26,8 +18,9 @@ public class GamePlayer
 		GamePlayer otherPlayer = (GamePlayer) other;
 		return otherPlayer.userName.equals(this.userName);
 	}
+	
 	public String getName()
 	{
-		return(userName);
+		return userName;
 	}
 }

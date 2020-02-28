@@ -18,10 +18,6 @@ public class Board
 	private int ship1Strength;
 	private int ship2Strength;
 	
-	
-	
-	
-	
 	public Board(int s)
 	{
 		size = s;

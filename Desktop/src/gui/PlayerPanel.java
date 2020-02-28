@@ -9,7 +9,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import network.GamePlayer;
+import network.player.GamePlayer;
 
 public class PlayerPanel extends JPanel 
 {
