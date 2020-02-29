@@ -4,15 +4,19 @@ import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-public class Utils 
+public final class Utils 
 {
+	public static final int BOARD_SIZE = 10;
+	
 	@XmlRootElement(name = "BoardLocation")
-	public class BoardLocation implements Serializable
+	public static class BoardLocation implements Serializable
 	{
 		/**
 		 * BoardLocation Serializable Implementation
 		 */
 		private static final long serialVersionUID = -8633355774970772848L;
+		
+		
 		
 		public int x;
 		public int y;

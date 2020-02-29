@@ -8,6 +8,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import org.apache.cxf.endpoint.Server;
+
 import network.player.GamePlayer;
 
 public class GameScreen extends JPanel
@@ -22,10 +24,10 @@ public class GameScreen extends JPanel
 	private Board board;
 	private BoardPanel boardPanel;
 	
-	//private Server server;
+	private Server server;
 	private ArrayList<GamePlayer> players;
 	
-	public GameScreen(Board b, /*Server server,*/ ArrayList<GamePlayer> players, int fw, int fh) 
+	public GameScreen(Board b, Server server, ArrayList<GamePlayer> players, int fw, int fh) 
 	{
 		frameWidth = fw;
 		frameHeight = fh;
@@ -35,7 +37,7 @@ public class GameScreen extends JPanel
 		add(boardPanel);
 		setFocusable(true);
 		
-		//this.server = server;
+		this.server = server;
 		this.players = players;
 		
 		/*

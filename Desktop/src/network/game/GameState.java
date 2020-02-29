@@ -12,20 +12,20 @@ public class GameState implements Serializable
 	private static final long serialVersionUID = 642156970056497974L;
 	
 	
-	public TeamState teamStateA;
-	public TeamState teamStateB;
+	public TeamState teamStateWhite;
+	public TeamState teamStateBlack;
 	public MapState mapState;
 	
 	
 	public GameState()
 	{
-		this(new TeamState(), new TeamState(), new MapState());
+		this(new TeamState(TeamState.TEAM.WHITE), new TeamState(TeamState.TEAM.BLACK), new MapState());
 	}
 	
 	public GameState(TeamState teamStateA, TeamState teamStateB, MapState mapState)
 	{
-		this.teamStateA = teamStateA;
-		this.teamStateB = teamStateB;
+		this.teamStateWhite = teamStateA;
+		this.teamStateBlack = teamStateB;
 		this.mapState = mapState;
 	}
 	
@@ -39,7 +39,7 @@ public class GameState implements Serializable
 
 		GameState other = (GameState) obj;
 		return (other.mapState.equals(this.mapState)) &&
-				(other.teamStateA.equals(this.teamStateA)) &&
-				(other.teamStateB.equals(this.teamStateB));
+				(other.teamStateWhite.equals(this.teamStateWhite)) &&
+				(other.teamStateBlack.equals(this.teamStateBlack));
 	}
 }

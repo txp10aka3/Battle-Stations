@@ -4,11 +4,22 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.ws.rs.core.MediaType;
 
+import org.apache.cxf.endpoint.Server;
+import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
+import org.apache.cxf.jaxrs.lifecycle.SingletonResourceProvider;
+import org.apache.cxf.jaxrs.provider.JAXBElementProvider;
+import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
+
+import network.GameDatabase;
 import network.player.GamePlayer;
 
 public class GameFrame extends JFrame
@@ -17,8 +28,6 @@ public class GameFrame extends JFrame
 	 * Requested by JFrame
 	 */
 	private static final long serialVersionUID = 4236762546533051047L;
-	private static final int TCP_PORT = 35330;
-	private static final int UPD_PORT = 35333;
 	
 	private Dimension screenSize;
 	private int frameWidth;
@@ -27,7 +36,7 @@ public class GameFrame extends JFrame
 	private Board board;
 	private JPanel panel;
 	
-	//private Server server;
+	private Server server;
 	private ArrayList<GamePlayer> players;
 	
 	public GameFrame()
@@ -39,21 +48,22 @@ public class GameFrame extends JFrame
 		board = new Board(10);
 		
 		players = null;
-		/*
-		server = new Server();
-		server.start();
-		try
-		{
-			server.bind(TCP_PORT, UPD_PORT);
-		}
-		catch (IOException e1) 
-		{
-			e1.printStackTrace();
-			JOptionPane.showMessageDialog(null, "Networking Not Found!");
-		}
-		
-		server.getKryo().register(GameMessage.class);
-		*/
+		JAXRSServerFactoryBean factoryBean = new JAXRSServerFactoryBean();
+        factoryBean.setResourceClasses(GameDatabase.class);
+        factoryBean.setResourceProvider(new SingletonResourceProvider(new GameDatabase()));
+ 
+        Map<Object, Object> extensionMappings = new HashMap<Object, Object>();
+        extensionMappings.put("xml", MediaType.APPLICATION_XML);
+        extensionMappings.put("json", MediaType.APPLICATION_JSON);
+        factoryBean.setExtensionMappings(extensionMappings);
+ 
+        List<Object> providers = new ArrayList<Object>();
+        providers.add(new JAXBElementProvider());
+        providers.add(new JacksonJsonProvider());
+        factoryBean.setProviders(providers);
+ 
+        factoryBean.setAddress("http://localhost:8080/");
+        server = factoryBean.create();
 		
 		/*
 		 * gameScreen = new GameScreen(board, server, frameWidth, frameHeight);
@@ -72,13 +82,13 @@ public class GameFrame extends JFrame
 	
 	public void goToPlayersScreen()
 	{
-		swapPanel(new PlayerScreen(/*server*/));
+		swapPanel(new PlayerScreen(server));
 	}
 	
 	public void gotToGameScreen(ArrayList<GamePlayer> player)
 	{
 		players.addAll(player);
-		swapPanel(new GameScreen(board, /*server,*/ players, frameWidth, frameHeight));
+		swapPanel(new GameScreen(board, server, players, frameWidth, frameHeight));
 	}
 	
 	private void swapPanel(JPanel newFrame)
@@ -90,10 +100,8 @@ public class GameFrame extends JFrame
 		panel = newFrame;
 	}
 	
-	/*
 	public Server getServer()
 	{
 		return server;
 	}
-	*/
 }
