@@ -40,7 +40,7 @@ public class PlayerScreen extends JPanel
 		this.setLayout(new GridBagLayout());
 		
 		JLabel titleLabel = new JLabel("Please Join the Game Server");
-		titleLabel.setFont(new Font(titleLabel.getFont().getFontName(), 20, Font.CENTER_BASELINE));
+		//titleLabel.setFont(new Font(titleLabel.getFont().getFontName(), 20, Font.CENTER_BASELINE));
 		gbc.insets = new Insets(5, 5, 5, 5);
 		gbc.anchor =  GridBagConstraints.CENTER;
 		gbc.gridx = gbc.gridy = 0;

@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.net.InetAddress;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
@@ -30,6 +31,8 @@ public class PlayerPanel extends JPanel
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		stationsArray = new String[]{"Cap", "Nav", "Gun", "Scan", "Sheild", "Beam"};
+		players.add(new GamePlayer("Thomas", null));
+		updateList(players);
 	}
 	
 	public void updateList(ArrayList<GamePlayer> newPlayers)

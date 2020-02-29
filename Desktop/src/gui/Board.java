@@ -94,7 +94,7 @@ public class Board
 				setShipR(Math.abs(ship-3), getShipR(ship));   //just for testing
 				moveShip(Math.abs(ship-3), new int[][] {{1,0}});
 			}
-			if(board[moved[0]][moved[1]] ==3)
+			if(board[moved[0]][moved[1]] == 3)
 			{
 				System.out.println("Crystal");
 			}

@@ -56,10 +56,10 @@ public class GameFrame extends JFrame
 		
 		server.getKryo().register(GameMessage.class);
 		
-		/*
-		 * gameScreen = new GameScreen(board, server, frameWidth, frameHeight);
-		 * add(gameScreen);
-		 */
+		
+		  gameScreen = new GameScreen(board, server, new ArrayList<GamePlayer>(), frameWidth, frameHeight);
+		  add(gameScreen);
+		 
 		
 		goToStartScreen();
 		setVisible(true);
